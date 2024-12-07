@@ -1,0 +1,91 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}">
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="menu-bar">
+            <!-- Выдвижная панель -->
+            <input type="checkbox" id="side-checkbox" />
+            <div class="side-panel">
+                <label class="side-button-2" for="side-checkbox">+</label>
+                <div class="side-title">Выдвижная панель:</div>
+                <nav class="panel">
+                    <a class="panel_link" href="/index">Главная</a>
+                    <a class="panel_link" href="/">Каталог</a>
+                    <a class="panel_link" href="/cart">Корзина</a>
+                    <a class="panel_link" href="/join">Вход</a>
+                </nav>
+            </div>
+
+            <!-- Кнопка открытия/закрытия панели -->
+            <div class="side-button-1-wr">
+                <label class="side-button-1" for="side-checkbox">
+                    <div class="side-b side-open"><img src="{% static 'img/white-menu.svg' %}" class="img_item" alt=""></div>
+                    <div class="side-b side-close"><img src="{% static 'img/white-menu.svg' %}" class="img_item" alt=""></div>
+                </label>
+            </div>
+
+            <!-- Логотип -->
+            <a href="/index.html" class="logo"><img src="{% static 'img/shopping-bag.svg' %}" alt="" class="logo_img">Top shop</a>
+
+        </div>
+        <ul class="nav-bar_list">
+            <li class="nav-bar_list_element"><a class="a_bar_element" href="/index.html">Главная</a></li>
+            <li class="nav-bar_list_element nav-bar_list_element--is-active"><a class="a_bar_element" href="/catalog.html">Каталог</a></li>
+            <li class="nav-bar_list_element"><a class="a_bar_element" href="/basket.html">Корзина</a></li>
+            <li class="nav-bar_list_element"><a class="a_bar_element" href="/join.html">Вход</a></li>
+        </ul>
+    </nav>
+
+    <div class="img_fon">
+        <div class="main_div">
+            <h1 class="main_h1">Каталог</h1>
+        </div>
+    </div>
+
+    <!-- Каталог товаров -->
+    <div class="catalog">
+        {% for product in products %}
+            <div class="product">
+                <img class="catalog_img" src="{% static 'img/' product.image %}" alt="{{ product.name }}">
+                <p class="catalog_tovar">
+                    Наименование: <br>{{ product.name }} <br> Цена: {{ product.price }} рублей
+                </p>
+                <button class="catalog_dobav">
+                    <a href="{% url 'add_to_cart' product.id %}">Добавить в корзину</a>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+
+    <footer class="footer" role="contentinfo">
+        <div class="footer_wrapper">
+            <ul class="social">
+                <li class="social_item"><a href="#!"><img src="{% static 'img/icons/vk-1-logo-svgrepo-com.svg' %}" alt="Link"></a></li>
+                <li class="social_item"><a href="#!"><img src="{% static 'img/icons/github-svgrepo-com.svg' %}" alt="Link"></a></li>
+                <li class="social_item"><a href="#!"><img src="{% static 'img/icons/telegram-svgrepo-com.svg' %}" alt="Link"></a></li>
+            </ul>
+            <div class="copyright">
+                <p>© 2024 frontend-dev.com</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS" crossorigin="anonymous"></script>
+</body>
+</html>
