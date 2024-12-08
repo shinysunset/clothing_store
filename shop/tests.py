@@ -68,111 +68,97 @@ from django.contrib.auth.models import User
 from .models import Product, Cart, CartItem
 
 
-class ProductModelTestCase(TestCase):
-    def setUp(self):
-        # Создаем пользователя для тестов
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
-
-        # Создаем продукт
-        self.product = Product.objects.create(
-            name='Test Product',
-            price=99.99,
-            description='A test product for testing purposes.'
-        )
-
-    def test_product_creation(self):
-        # Проверяем, что продукт был создан
-        self.assertEqual(self.product.name, 'Test Product')
-        self.assertEqual(self.product.price, 99.99)
-        self.assertEqual(self.product.description, 'A test product for testing purposes.')
-
-    def test_product_str_method(self):
-        # Проверяем метод __str__ модели Product
-        self.assertEqual(str(self.product), 'Test Product')
-
-
-class CartModelTestCase(TestCase):
-    def setUp(self):
-        # Создаем пользователя для тестов
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
-
-        # Создаем корзину для пользователя
-        self.cart = Cart.objects.create(user=self.user)
-
-    def test_cart_creation(self):
-        # Проверяем, что корзина была создана
-        self.assertEqual(self.cart.user.username, 'testuser')
-        self.assertTrue(self.cart.created_at)
-
-    def test_cart_str_method(self):
-        # Проверяем метод __str__ модели Cart
-        self.assertEqual(str(self.cart), 'Cart for testuser')
-
-
-class CartItemModelTestCase(TestCase):
-    def setUp(self):
-        self.product = Product.objects.create(name='Test Product', price=100)
-        self.cart = Cart.objects.create(user=User.objects.create(username='testuser'))
-        self.cart_item = CartItem.objects.create(cart=self.cart, product=self.product, quantity=2)
-
-    def test_cart_item_creation(self):
-        # Проверяем, что элемент в корзине был создан
-        self.assertEqual(self.cart_item.quantity, 2)
-        self.assertEqual(self.cart_item.product.name, 'Test Product')
-        self.assertEqual(self.cart_item.cart.user.username, 'testuser')
-
-
+# Тесты для модели Product
 class ProductModelTestCase(TestCase):
 
     def setUp(self):
+        """
+        Метод setUp выполняется перед каждым тестом.
+        Здесь мы создаем пользователя и продукт, которые будут использоваться в тестах.
+        """
         self.product = Product.objects.create(name="Test Product", price=100)
 
     def test_product_creation(self):
-        """Проверяет, что продукт создается корректно"""
+        """
+        Тестирует создание продукта.
+        Проверяет, что продукт был правильно создан с нужными аттрибутами.
+        """
+        # Получаем продукт из базы данных
         product = Product.objects.get(name="Test Product")
+        # Проверяем, что название и цена продукта соответствуют ожиданиям
         self.assertEqual(product.name, "Test Product")
         self.assertEqual(product.price, 100)
 
     def test_product_str_method(self):
-        """Проверяет строковое представление продукта"""
+        """
+        Тестирует метод __str__ модели Product.
+        Проверяет, что строковое представление продукта возвращает его название.
+        """
         product = Product.objects.get(name="Test Product")
         self.assertEqual(str(product), "Test Product")
 
 
+# Тесты для модели Cart
 class CartModelTestCase(TestCase):
 
     def setUp(self):
+        """
+        Метод setUp выполняется перед каждым тестом.
+        Здесь создаем пользователя и корзину для тестов.
+        """
         self.user = User.objects.create(username="testuser")
         self.cart = Cart.objects.create(user=self.user)
 
     def test_cart_creation(self):
-        """Проверяет, что корзина создается корректно"""
+        """
+        Тестирует создание корзины.
+        Проверяет, что корзина была правильно создана для пользователя.
+        """
+        # Получаем корзину из базы данных по пользователю
         cart = Cart.objects.get(user=self.user)
+        # Проверяем, что корзина привязана к нужному пользователю
         self.assertEqual(cart.user.username, "testuser")
 
     def test_cart_str_method(self):
-        """Проверяет строковое представление корзины"""
+        """
+        Тестирует метод __str__ модели Cart.
+        Проверяет, что строковое представление корзины возвращает правильную строку.
+        """
         cart = Cart.objects.get(user=self.user)
         self.assertEqual(str(cart), f"Cart for {self.user.username}")
 
 
+# Тесты для модели CartItem
 class CartItemModelTestCase(TestCase):
 
     def setUp(self):
+        """
+        Метод setUp выполняется перед каждым тестом.
+        Здесь создаем пользователя, продукт, корзину и элемент корзины для тестов.
+        """
         self.user = User.objects.create(username="testuser")
         self.product = Product.objects.create(name="Test Product", price=100)
         self.cart = Cart.objects.create(user=self.user)
         self.cart_item = CartItem.objects.create(cart=self.cart, product=self.product, quantity=2)
 
     def test_cart_item_creation(self):
-        """Проверяет создание элемента в корзине"""
+        """
+        Тестирует создание элемента в корзине.
+        Проверяет, что элемент корзины был создан правильно и привязан к нужным объектам.
+        """
+        # Получаем элемент корзины
         cart_item = CartItem.objects.get(cart=self.cart, product=self.product)
+        # Проверяем, что количество товара в корзине соответствует ожиданиям
         self.assertEqual(cart_item.quantity, 2)
+        # Проверяем, что продукт и корзина правильно связаны
         self.assertEqual(cart_item.product.name, "Test Product")
         self.assertEqual(cart_item.cart.user.username, "testuser")
 
     def test_cart_item_str_method(self):
-        """Проверяет строковое представление элемента в корзине"""
+        """
+        Тестирует метод __str__ модели CartItem.
+        Проверяет, что строковое представление элемента корзины правильно отображает количество и название продукта.
+        """
         cart_item = CartItem.objects.get(cart=self.cart, product=self.product)
         self.assertEqual(str(cart_item), "2 x Test Product")
 

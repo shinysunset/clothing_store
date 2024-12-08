@@ -30,28 +30,41 @@
 # shop/models.py
 from django.db import models
 
+# Модель для представления продукта
 class Product(models.Model):
+    # Название продукта (строка длиной до 100 символов)
     name = models.CharField(max_length=100)
+    # Цена продукта (десятичное число с 2 знаками после запятой)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    # Описание продукта (текстовое поле)
     description = models.TextField()
 
+    # Метод для строкового представления объекта (будет отображаться в админке и при выводе объектов)
     def __str__(self):
         return self.name
 
-
+# Модель для представления корзины
 class Cart(models.Model):
+    # Связь с пользователем (каждая корзина привязана к одному пользователю)
+    # "auth.User" - это стандартная модель пользователя в Django
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    # Дата и время создания корзины (заполняется автоматически)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    # Метод для строкового представления объекта корзины
     def __str__(self):
         return f"Cart for {self.user.username}"
 
-
+# Модель для представления товара в корзине
 class CartItem(models.Model):
+    # Связь с корзиной (каждый товар привязан к одной корзине)
     cart = models.ForeignKey('Cart', on_delete=models.CASCADE)
+    # Связь с продуктом (каждый товар в корзине связан с конкретным продуктом)
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
+    # Количество добавленных товаров в корзину
     quantity = models.PositiveIntegerField()
 
+    # Метод для строкового представления объекта CartItem
+    # Отображается количество и название продукта в корзине
     def __str__(self):
-        # Убедитесь, что формат строки соответствует ожидаемому в тестах
         return f"{self.quantity} x {self.product.name}"
