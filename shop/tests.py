@@ -77,7 +77,6 @@ class ProductModelTestCase(TestCase):
         Здесь мы создаем пользователя и продукт, которые будут использоваться в тестах.
         """
         self.product = Product.objects.create(name="Test Product", price=100)
-
     def test_product_creation(self):
         """
         Тестирует создание продукта.

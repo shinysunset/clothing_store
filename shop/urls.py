@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path  # type: ignore
 from . import views
 
 urlpatterns = [
@@ -9,5 +9,7 @@ urlpatterns = [
     path('basket.html', views.basket_view, name='basket'),  # Новый маршрут
     path('increase_quantity/<int:item_id>/', views.increase_quantity, name='increase_quantity'),
     path('decrease_quantity/<int:item_id>/', views.decrease_quantity, name='decrease_quantity'),
+    path('register/', views.register, name='register'),
+    path('login/', views.login_view, name='login'),
 ]
 

@@ -1,5 +1,5 @@
-#from django.db import models
-#from django.contrib.auth.models import User
+# from django.db import models
+# from django.contrib.auth.models import User
 
 # class Product(models.Model):
 #     name = models.CharField(max_length=100, verbose_name="Название продукта")
@@ -28,9 +28,11 @@
 
 # shop/models.py
 # shop/models.py
-from django.db import models
+from django.db import models  # type: ignore
+
 
 # Модель для представления продукта
+
 class Product(models.Model):
     # Название продукта (строка длиной до 100 символов)
     name = models.CharField(max_length=100)
@@ -39,9 +41,11 @@ class Product(models.Model):
     # Описание продукта (текстовое поле)
     description = models.TextField()
 
+
     # Метод для строкового представления объекта (будет отображаться в админке и при выводе объектов)
     def __str__(self):
         return self.name
+
 
 # Модель для представления корзины
 class Cart(models.Model):

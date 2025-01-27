@@ -1,12 +1,14 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, authenticate
+from django.shortcuts import render, redirect
+
+from shop.models import Cart, CartItem
+
 
 # Create your views here.
 
-
-
-from django.shortcuts import render
-from django.shortcuts import redirect
-from .models import Cart, CartItem, Product
 
 def index(request):
     return render(request, 'shop/index.html')
@@ -27,6 +29,8 @@ def add_to_cart(request, product_id):
         cart_item.save()
 
     return redirect('catalog')  # Перенаправляем на страницу каталога
+
+
 
 def cart(request):
     cart, created = Cart.objects.get_or_create(user=request.user)
@@ -54,3 +58,36 @@ def decrease_quantity(request, item_id):
 
 def basket_view(request):
     return render(request, 'shop/basket.html')
+
+
+
+
+
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Автоматический логин после регистрации
+            return redirect('index')  # Перенаправление на главную страницу
+    else:
+        form = UserCreationForm()
+    return render(request, 'reg.html', {'form': form})
+
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('index')  # Перенаправление на главную страницу
+    else:
+        form = AuthenticationForm()
+    return render(request, 'join.html', {'form': form})
+
+
+@login_required
+def view_cart(request):
+    cart = Cart.objects.get(user=request.user)
+    return render(request, 'basket.html', {'cart': cart})
